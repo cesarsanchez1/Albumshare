@@ -1,0 +1,198 @@
+<!-- author cesar sanchez (csanchez64@fordham.edu) -->
+<head>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+      }
+  
+      img {
+        width: 250px;
+      }
+    </style>
+    </head>
+  <!doctype html>
+  {% if message %}
+    <h4>{{message}}!</h4>
+  {% endif %}
+  <title>Photoshare</title>
+  {% if name %}
+    <h1>Hello {{ name }}!</h1>
+  {% endif %}
+  
+  {% if photos and name %}
+  <h2>Here are your photos</h2>
+      <ul>
+      {% for photo in photos %}
+  
+          <li>{{photo[2]}}<br />
+          <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/><a href="/photo/{{photo[1]}}">More Info</a></li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+  
+  {% if not photos and name %}
+  <h2>You have no photos</h2>
+  {% endif %}
+  
+  {% if photos and not name %}
+  <h2>Here are all the photos</h2>
+      <ul>
+      {% for photo in photos %}
+          <li>{{photo[2]}}<br />
+          <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/><a href="/photo/{{photo[1]}}">More Info</a></li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+  
+  {% if albums %}
+  <h2>Here are your albums</h2>
+      <ul>
+      {% for album in albums %}
+  
+          <li>{{album[0]}}<br />
+            {{album[1]}}
+          </li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+  
+  {% if message is none %}
+    <p>You should <a href='/login'>login!</a></p>
+  {% else %}
+    <p> Go to <a href='/profile'>profile?</a></p>
+  {% endif %}
+  
+  <ul>
+  <li><a href='/upload'>Upload a photo</a></li>
+  <li><a href='/browsePhotos'>Browse photos</a></li>
+  <li><a href='/browsePublic'>Browse public photos</a></li>
+  <li><a href='/browsePublicAlbums'>Browse public albums</a></li>
+  <li><a href='/createAlbum'>Create an album</a></li>
+  <li><a href='/deleteAlbum'>Delete an album</a></li>
+  <li><a href='/browseAlbum'>Browse your albums</a></li>
+  {% if name %}
+  <li><a href='/friends'>Search and Add Friends</a></li>
+  {% endif %}
+  <li><a href='/addtags'>Add Tags</a></li>
+  <li><a href='/browsetags'>Browse Your Tags and Public Tags</a></li>
+  <li><a href='/browsePhotosByTag'>Browse Photos by Tags</a></li>
+  <li><a href='/logout'>Logout</a></li>
+  <li><a href='/'>Home</a></li>
+  
+  {% if contributions %}
+  <h3>
+    Top 10 Contributors
+    </h3>
+  <table>
+    <tr>
+      <th>
+        First Name
+      </th>
+      <th>
+        Last Name
+      </th>
+      <th>
+        Contributions
+      </th>
+    </tr>
+    {% for row in contributions %}
+     <tr>
+    {% for cell in row %}
+      <td>{{cell}}</td>
+    {% endfor %}
+    </tr>
+    {% endfor %}
+    </table>
+  
+  {% endif %}
+  
+  {% if popular_tags %}
+  <h3>
+    Top 10 Tags
+  </h3>
+  <table>
+    <tr>
+      <th>
+        Tag
+      </th>
+      <th>
+        # of Photos
+      </th>
+    </tr>
+    {% for tag in popular_tags %}
+    <tr>
+      <td><a href="/home/showtagphotos/{{tag[0]}}">{{tag[0]}}</a></td>
+      <td>{{tag[1]}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  {% endif %}
+  
+  {% if uid %}
+  <h3>You may also like</h3>
+  <table>
+    <tr>
+      <th>
+        Photo 
+      </th>
+      <th>
+        Link
+      </th>
+      <th>
+        Number of matched tags
+      </th>
+    </tr>
+  {% for row in likeRecommendation %}
+  <tr>
+  <td>
+    {{row[0]}}
+  </td>
+  <td>
+    <a href="/photo/{{row[4]}}">More info</a>
+    </td>
+    <td>
+      {{row[2]}}
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+  {% endif %}
+  
+  
+  {% if friend_recommendations %}
+  <h3>You may also know...</h3>
+  <table>
+    <tr>
+      <th>
+        Email
+      </th>
+      <th>
+        First Name
+      </th>
+      <th>
+        Last Name
+      </th>
+    </tr>
+    {% for friend in friend_recommendations %}
+    <tr>
+      <td>
+        {{ friend[ 0 ] }}
+      </td>
+      <td>
+        {{ friend[ 1 ] }}
+      </td>
+      <td>
+        {{ friend[ 2 ] }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  
+  </ul>
+  <form method="post" enctype="multipart/form-data" action="/">
+    <label for="cSearch">Search comments</label><br>
+    <input type="text" placeholder="Search for comments" id="cSearch" name="cSearch" > <br>
+    <input type="Submit" value="Search comments">
+    </form>
